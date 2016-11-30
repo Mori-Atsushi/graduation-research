@@ -7,8 +7,6 @@ import re
 class Transition:
     def __init__(self, folder):
         self.__transition = np.zeros((62, 62))
-#        for i in range(1, len(self.__transition)):
-#            self.__transition[i][len(self.__transition[i]) - 1] = 1
         self.__re_key = re.compile(r'^//[#b][0-9]$')
         self.__re_rest = re.compile(r'^[0-9]+$')
         self.__re_chord = []
@@ -32,7 +30,11 @@ class Transition:
             i += 1
 
         for i in range(0, len(self.__transition)):
-            self.__transition[i] = self.__transition[i] / np.linalg.norm(self.__transition[i])
+            sum = self.__transition[i].sum()
+            if sum == 0:
+                self.__transition[i][len(self.__transition[i]) - 1] = 1
+                sum = 1
+            self.__transition[i] = self.__transition[i] / sum
     
     def __analyze(self, filename):
         chordList = []

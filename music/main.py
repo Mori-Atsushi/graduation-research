@@ -2,6 +2,7 @@
 
 import numpy as np
 from hmmlearn import hmm
+import chord
 
 class States:
     def __init__(self):
@@ -30,10 +31,8 @@ class States:
         self.__start_probability[0] = 1
 
         #遷移確率の定義
-        self.__transition_probability = np.zeros((self.__n_states, self.__n_states))
-        for i in range(0, self.__n_states):
-            for j in range(1, self.__n_states):
-                self.__transition_probability[i][j] = 1.0 / (self.__n_states - 1)
+        transition = chord.Transition('./song')
+        self.__transition_probability = transition.getTransitionProbability()
 
         #出力確率の定義
         self.__emission_probability = np.identity(self.__n_states)
@@ -62,6 +61,6 @@ if __name__ == '__main__':
     model.transmat_ = states.getTransitionProbability()
     model.emissionprob_ = states.getEmissonProbability()
 
-    test = np.array([[0, 1, 2, 3, 4, 61]]).T
+    test = np.array([[0, 1, 1, 41, 1, 61]]).T
     result = model.predict(test)
     print result
