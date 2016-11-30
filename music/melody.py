@@ -26,10 +26,10 @@ class Melody:
                 self.__chordMelody[i][(i / 5 + 7) % 12] = 0.3
                 
     def calcEmissionProbability(self, measure):
-        emisson_probability = np.zeros(60)
+        emisson_probability = np.zeros(62)
         i = 0
         for chord in self.__chordMelody:
-            emisson_probability[i] = np.dot(chord, measure)
+            emisson_probability[i + 1] = np.dot(chord, measure)
             i += 1
         return emisson_probability
 

@@ -3,9 +3,10 @@
 import numpy as np
 from hmmlearn import hmm
 import chord
+import melody
 
 class States:
-    def __init__(self):
+    def __init__(self, phrase):
         #状態名
         self.states = [
             'start',
@@ -35,8 +36,20 @@ class States:
         self.__transition_probability = transition.getTransitionProbability()
 
         #出力確率の定義
-        self.__emission_probability = np.identity(self.__n_states)
-    
+        self.__emission_probability = np.empty((self.__n_states, 0))
+        temp = np.zeros(self.__n_states)
+        temp[0] = 1.0
+        self.__emission_probability = np.c_[self.__emission_probability, temp]
+        melo = melody.Melody()
+        i = 1
+        for measure in phrase:
+            temp = melo.calcEmissionProbability(measure)
+            self.__emission_probability = np.c_[self.__emission_probability, temp]
+            i += 1
+        temp = np.zeros(self.__n_states)
+        temp[-1] = 1.0
+        self.__emission_probability = np.c_[self.__emission_probability, temp]
+
     #状態数の取得
     def getNum(self):
         return self.__n_states
@@ -55,12 +68,24 @@ class States:
 
 
 if __name__ == '__main__':
-    states = States()
+    phrase = np.array([
+        [ 0.25, 0.0, 0.375, 0.0, 0.375, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [ 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [ 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [ 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.75, 0.0, 0.0, 0.0, 0.0],
+        [ 0.25, 0.0, 0.375, 0.0, 0.375, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [ 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [ 0.0, 0.625, 0.0, 0.375, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    ])
+
+    states = States(phrase)
     model = hmm.MultinomialHMM(n_components = states.getNum())
     model.startprob_ = states.getStartProbability()
     model.transmat_ = states.getTransitionProbability()
     model.emissionprob_ = states.getEmissonProbability()
 
-    test = np.array([[0, 1, 1, 41, 1, 61]]).T
+    test = np.matrix(np.arange(len(phrase) + 2)).T
     result = model.predict(test)
-    print result
+    for item in result:
+        print states.states[item],
