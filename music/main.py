@@ -4,6 +4,7 @@ import numpy as np
 from hmmlearn import hmm
 import chord
 import melody
+import midi
 
 class States:
     def __init__(self, phrase):
@@ -68,16 +69,8 @@ class States:
 
 
 if __name__ == '__main__':
-    phrase = np.array([
-        [ 0.25, 0.0, 0.375, 0.0, 0.375, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [ 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [ 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [ 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.75, 0.0, 0.0, 0.0, 0.0],
-        [ 0.25, 0.0, 0.375, 0.0, 0.375, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [ 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [ 0.0, 0.625, 0.0, 0.375, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    ])
+    midi = midi.Midi('test.mid')
+    phrase = midi.getPhrase()
 
     states = States(phrase)
     model = hmm.MultinomialHMM(n_components = states.getNum())
