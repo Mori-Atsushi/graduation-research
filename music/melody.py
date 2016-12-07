@@ -31,6 +31,7 @@ class Melody:
         for chord in self.__chordMelody:
             emisson_probability[i + 1] = np.dot(chord, measure)
             i += 1
+        emisson_probability /= emisson_probability.sum()
         return emisson_probability
 
 if __name__ == '__main__':
