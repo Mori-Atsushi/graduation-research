@@ -8,6 +8,8 @@ import midi
 
 class States:
     def __init__(self, phrase):
+        songFolder = './song'
+        scoreFolder = './score'
         #状態名
         self.states = [
             'start',
@@ -33,7 +35,7 @@ class States:
         self.__start_probability[0] = 1
 
         #遷移確率の定義
-        transition = chord.Transition('./song')
+        transition = chord.Transition(songFolder)
         self.__transition_probability = transition.getTransitionProbability()
 
         #出力確率の定義
@@ -41,7 +43,7 @@ class States:
         temp = np.zeros(self.__n_states)
         temp[0] = 1.0
         self.__emission_probability = np.c_[self.__emission_probability, temp]
-        melo = melody.Melody()
+        melo = melody.Melody(songFolder, scoreFolder)
         i = 1
         for measure in phrase:
             temp = melo.calcEmissionProbability(measure)
@@ -69,7 +71,7 @@ class States:
 
 
 if __name__ == '__main__':
-    midi = midi.Midi('test.mid')
+    midi = midi.Midi('test5.mid')
     phrase = midi.getPhrase()
 
     states = States(phrase)
