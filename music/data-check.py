@@ -10,7 +10,6 @@ if __name__ == '__main__':
     midi_data = pretty_midi.PrettyMIDI(midiFilename)
     tempo = midi_data.get_tempo_changes()[1][0]
     chroma_data = midi_data.get_chroma(tempo)
-    x = 7 * 240
     key = '#0'
     re_key = re.compile(r'^//[#b][0-9]$')
     re_rest = re.compile(r'^[0-9]+$')
