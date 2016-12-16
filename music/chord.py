@@ -12,7 +12,7 @@ class Transition:
         self.__re_chord = []
         self.__re_triad = []
         chordList = [r'C|B#', r'C#|Db', r'D', r'D#|Eb', r'E|Fb', r'F|E#', r'F#|Gb', r'G', r'G#|Ab', r'A', r'A#|Bb', r'B|Cb']
-        triadList = [r'', r'm', r'aug', r'dim', r'sus4']
+        triadList = [r'', r'm', r'7?aug', r'7?dim', r'7?sus4']
         i = 0
         for item in chordList:
             self.__re_chord.append(re.compile(r'^(' + item + r')($|[^#b])'))
@@ -94,4 +94,7 @@ class Transition:
 
 if __name__ == '__main__':
     transition = Transition('./song')
-    print transition.getTransitionProbability()
+    for trans in transition.getTransitionProbability():
+        for data in trans:
+          print data,
+        print ''

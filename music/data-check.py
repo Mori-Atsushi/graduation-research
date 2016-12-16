@@ -5,8 +5,8 @@ import re
 import pretty_midi
 
 if __name__ == '__main__':
-    chordFilename = './song/1.txt'
-    midiFilename = './score/1.mid'
+    chordFilename = './song/12.txt'
+    midiFilename = './score/12.mid'
     midi_data = pretty_midi.PrettyMIDI(midiFilename)
     tempo = midi_data.get_tempo_changes()[1][0]
     chroma_data = midi_data.get_chroma(tempo)
