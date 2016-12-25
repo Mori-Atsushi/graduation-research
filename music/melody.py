@@ -104,6 +104,9 @@ class Melody:
             emisson_probability[i + 1] = np.dot(chord, measure)
             i += 1
         emisson_probability /= emisson_probability.sum()
+#        for data in emisson_probability:
+#            print data,
+#        print ''
         return emisson_probability
 
     def getChordMelody(self):
