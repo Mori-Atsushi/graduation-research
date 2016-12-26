@@ -6,7 +6,7 @@ import re
 
 class Transition:
     def __init__(self, folder):
-        self.__transition = np.zeros((62, 62))
+        self.__transition = np.zeros((3844, 3844))
         self.__re_key = re.compile(r'^//[#b][0-9]$')
         self.__re_rest = re.compile(r'^[0-9]+$')
         self.__re_chord = []
@@ -35,6 +35,7 @@ class Transition:
                 self.__transition[i][len(self.__transition[i]) - 1] = 1
                 sum = 1
             self.__transition[i] = self.__transition[i] / sum
+        print self.__transition[0]
     
     def __analyze(self, filename):
         chordList = []
@@ -57,17 +58,20 @@ class Transition:
                             chordList.append(self.__replaceChord(key, chord))
                             lastChord = chord
 
-        lastChord = 0
+        endChord = 61
+        lastChord = [0, 0]
         for chord in chordList:
             if chord == -1:
-                chord = 61
-            if lastChord == 0 and chord == 61:
+                chord = endChord
+            if (lastChord[0] == 0 and lastChord[1] == 0) and chord == endChord:
                 continue
-            self.__transition[lastChord][chord] += 1
-            if chord == 61:
-                lastChord = 0
+            self.__transition[lastChord[0] * 62 + lastChord[1]][lastChord[1] * 62 + chord] += 1
+            if chord == endChord:
+                lastChord[0] = 0
+                lastChord[1] = 0
             else:
-                lastChord = chord
+                lastChord[0] = lastChord[1]
+                lastChord[1] = chord
 
     def __replaceChord(self, key, chord):
         if key.startswith('#'):

@@ -5,13 +5,14 @@ from hmmlearn import hmm
 import chord
 import melody
 import midi
+import itertools
 
 class States:
     def __init__(self, phrase):
         songFolder = './song'
         scoreFolder = './score'
         #状態名
-        self.states = [
+        statesName = [
             'start',
             'C', 'Cm', 'Caug', 'Cdim', 'Csus4',
             'C#', 'C#m', 'C#aug', 'C#dim', 'C#sus4',
@@ -27,8 +28,11 @@ class States:
             'B', 'Bm', 'Baug', 'Bdim', 'Bsus4',
             'end']
         
+        self.states =  list(itertools.product(statesName, statesName))
+
         #状態数
         self.__n_states = len(self.states)
+        print self.__n_states
 
         #初期状態確率の定義
         self.__start_probability = np.zeros(self.__n_states)
@@ -71,7 +75,7 @@ class States:
 
 
 if __name__ == '__main__':
-    midi = midi.Midi('test5.mid')
+    midi = midi.Midi('test.mid')
     phrase = midi.getPhrase()
 
     states = States(phrase)

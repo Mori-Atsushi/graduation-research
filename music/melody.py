@@ -98,15 +98,18 @@ class Melody:
 	    	return 12 - int(key[1:]) * 7 % 12
 
     def calcEmissionProbability(self, measure):
-        emisson_probability = np.zeros(62)
+        emisson_probability = np.zeros(3844)
         i = 0
         for chord in self.__chordMelody:
-            emisson_probability[i + 1] = np.dot(chord, measure)
+            temp = np.dot(chord, measure)
+            for j in range(62):
+                emisson_probability[i + 1 + j * 62] = temp
             i += 1
         emisson_probability /= emisson_probability.sum()
 #        for data in emisson_probability:
 #            print data,
 #        print ''
+        print emisson_probability[1]
         return emisson_probability
 
     def getChordMelody(self):
