@@ -79,7 +79,7 @@ if __name__ == '__main__':
     phrase = midi.getPhrase()
 
     states = States(phrase)
-    model = hmm.MultinomialHMM(n_components = states.getNum())
+    model = hmm.MultinomialHMM(n_components = states.getNum(), n_iter=100000, tol=0.0001)
     model.startprob_ = states.getStartProbability()
     model.transmat_ = states.getTransitionProbability()
     model.emissionprob_ = states.getEmissonProbability()

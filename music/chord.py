@@ -35,7 +35,9 @@ class Transition:
                 self.__transition[i][len(self.__transition[i]) - 1] = 1
                 sum = 1
             self.__transition[i] = self.__transition[i] / sum
-        print self.__transition[0]
+        for data in self.__transition[1]:
+            print data,
+        print ''
     
     def __analyze(self, filename):
         chordList = []

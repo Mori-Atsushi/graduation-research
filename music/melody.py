@@ -109,7 +109,6 @@ class Melody:
 #        for data in emisson_probability:
 #            print data,
 #        print ''
-        print emisson_probability[1]
         return emisson_probability
 
     def getChordMelody(self):
