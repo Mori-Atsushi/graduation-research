@@ -8,7 +8,7 @@ import pretty_midi
 class Melody:
     def __init__(self, states):
         self.__n_states = len(states)
-        self.__chordMelody = np.zeros((self.__n_states - 2, 12))
+        self.__chordMelody = np.zeros((self.__n_states, 12))
         self.__re_chord = []
         self.__re_triad = []
         chordList = [r'C|B#', r'C#|Db', r'D', r'D#|Eb', r'E|Fb', r'F|E#', r'F#|Gb', r'G', r'G#|Ab', r'A', r'A#|Bb', r'B|Cb']
@@ -22,7 +22,7 @@ class Melody:
             i += 1
 
     def analyze(self, chordFilename, melodyFilename):
-        chordMelody = np.zeros((self.__n_states - 2, 12))
+        chordMelody = np.zeros((62, 12))
         midi_data = pretty_midi.PrettyMIDI(melodyFilename)
         tempo = midi_data.get_tempo_changes()[1][0]
         chroma_data = midi_data.get_chroma(tempo)
@@ -47,7 +47,7 @@ class Melody:
                     temp = i
                     j = i + x
                     for chord in chordArray:
-                        chord_id = self.__replaceChord(keyNum, chord) - 1
+                        chord_id = self.__replaceChord(keyNum, chord)
                         a = 0
                         for data in chroma_data[:,i:j]:
                             for belo in data:
@@ -57,17 +57,26 @@ class Melody:
                         i += x
                         j += x
                     i = temp + 240
+        temp = np.zeros((self.__n_states, 12))
+        j = 0
+        for i in range(61):
+            for data in chordMelody:
+                temp[j] = data
+                j += 1
 
-        self.__chordMelody += chordMelody
+        self.__chordMelody += temp
 
     def normalizeation(self, deleteList):
-        deleteList = map(lambda n:n-1, deleteList)
         for i in range(0, len(self.__chordMelody)):
             sum = self.__chordMelody[i].sum()
             if sum == 0:
                 sum = 1
             self.__chordMelody[i] = self.__chordMelody[i] / sum
         self.__chordMelody = np.delete(self.__chordMelody, deleteList, 0)
+#        for chord in self.__chordMelody:
+#            for data in chord:
+#                print data,
+#            print ''
 
     def __replaceChord(self, keyNum, chord):
         i = 0
@@ -91,10 +100,10 @@ class Melody:
 	    	return 12 - int(key[1:]) * 7 % 12
 
     def calcEmissionProbability(self, measure):
-        emisson_probability = np.zeros(len(self.__chordMelody) + 2)
+        emisson_probability = np.zeros(len(self.__chordMelody))
         i = 0
         for chord in self.__chordMelody:
-            emisson_probability[i + 1] = np.dot(chord, measure)
+            emisson_probability[i] = np.dot(chord, measure)
             i += 1
         emisson_probability /= emisson_probability.sum()
 #        for data in emisson_probability:

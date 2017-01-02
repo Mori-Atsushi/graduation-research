@@ -24,6 +24,10 @@ if __name__ == '__main__':
 
     #遷移確率の定義
     model.transmat_ = transition.transition.getTransitionProbability()
+#    for trans in model.transmat_:
+#        for data in trans:
+#          print data,
+#        print ''
 
     #出力確率の定義
     emission_probability = np.empty((n_states, 0))
@@ -36,7 +40,9 @@ if __name__ == '__main__':
         emission_probability = np.c_[emission_probability, temp]
         i += 1
     temp = np.zeros(n_states)
-    temp[-1] = 1.0
+    for i in range(n_states):
+        if transition.getChord(i)[1] == 'end':
+            temp[i] = 1.0
     emission_probability = np.c_[emission_probability, temp]
     model.emissionprob_ = emission_probability
 

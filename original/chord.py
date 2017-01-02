@@ -4,11 +4,12 @@ import numpy as np
 import os.path
 import transition
 import melody
+import itertools
 
 class Analyze:
     def __init__(self, chordFolder, melodyFolder):
         #状態名
-        self.states = [
+        statesName = [
             'start',
             'C', 'Cm', 'Caug', 'Cdim', 'Csus4',
             'C#', 'C#m', 'C#aug', 'C#dim', 'C#sus4',
@@ -24,6 +25,7 @@ class Analyze:
             'B', 'Bm', 'Baug', 'Bdim', 'Bsus4',
             'end']
 
+        self.states =  list(itertools.product(statesName, statesName))
         self.transition = transition.Transition(self.states)
         self.melody = melody.Melody(self.states)
 
@@ -42,6 +44,7 @@ class Analyze:
         deleteList = self.transition.getDeleteList()
         self.__new_states = self.transition.normalization(deleteList)
         self.melody.normalizeation(deleteList)
+#        print self.__new_states
 
     def getNum(self):
         return len(self.__new_states)

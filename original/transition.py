@@ -44,17 +44,20 @@ class Transition:
                             chordList.append(self.__replaceChord(key, chord))
                             lastChord = chord
 
-        lastChord = 0
+        endChord = 61
+        lastChord = [0, 0]
         for chord in chordList:
             if chord == -1:
-                chord = self.__n_states - 1
-            if lastChord == 0 and chord == self.__n_states - 1:
+                chord = endChord
+            if (lastChord[0] == 0 and lastChord[1] == 0) and chord == endChord:
                 continue
-            self.__transition[lastChord][chord] += 1
-            if chord == self.__n_states - 1:
-                lastChord = 0
+            self.__transition[lastChord[0] * 62 + lastChord[1]][lastChord[1] * 62 + chord] += 1
+            if chord == endChord:
+                lastChord[0] = 0
+                lastChord[1] = 0
             else:
-                lastChord = chord
+                lastChord[0] = lastChord[1]
+                lastChord[1] = chord
 
     def normalization(self, deleteList):
         appendList = []
@@ -63,14 +66,17 @@ class Transition:
             if sum == 0:
                 self.__transition[i][len(self.__transition[i]) - 1] = 1
                 sum = 1
-            else:
-                appendList.append(i)
             self.__transition[i] = self.__transition[i] / sum
         self.__transition = np.delete(self.__transition, deleteList, 0)
         self.__transition = np.delete(self.__transition, deleteList, 1)
         new_states = []
-        for data in appendList:
-            new_states.append(self.__states[data])
+        i = 0
+        for data in range(len(self.__states)):
+            if data == deleteList[i]:
+                if i < len(deleteList) - 1:
+                    i += 1
+            else:
+                new_states.append(self.__states[data])
         return new_states
 
     def __replaceChord(self, key, chord):
@@ -98,8 +104,9 @@ class Transition:
 
     def getDeleteList(self):
         deleteList = []
+        row_sum = np.sum(self.__transition, axis=0)
+        col_sum = np.sum(self.__transition, axis=1)
         for i in range(len(self.__transition)):
-            sum = self.__transition[i].sum()
-            if sum == 0:
+            if row_sum[i] == 0 and col_sum[i] == 0:
                 deleteList.append(i)
         return deleteList
