@@ -43,6 +43,7 @@ class Transition:
                         if lastChord != chord:
                             chordList.append(self.__replaceChord(key, chord))
                             lastChord = chord
+        chordList.append(-1)
 
         lastChord = 0
         for chord in chordList:
