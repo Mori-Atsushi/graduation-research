@@ -7,7 +7,7 @@ import midi
 import melody
 
 if __name__ == '__main__':
-    filename = 'test.mid'
+    filename = 'test2.mid'
     chordFolder = './chord'
     melodyFolder = './melody'
 
