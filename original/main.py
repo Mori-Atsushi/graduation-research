@@ -18,8 +18,9 @@ if __name__ == '__main__':
     model = hmm.MultinomialHMM(n_components = n_states)
 
     #初期状態確率の定義
-    start_probability = np.zeros(n_states)
-    start_probability[0] = 1
+    start_probability = np.ones(n_states)
+    start_probability[0] = 0
+    start_probability /= start_probability.sum()
     model.startprob_ = start_probability
 
     #遷移確率の定義
@@ -46,7 +47,7 @@ if __name__ == '__main__':
     emission_probability = np.c_[emission_probability, temp]
     model.emissionprob_ = emission_probability
 
-    test = np.matrix(np.arange(len(phrase) + 2)).T
+    test = np.matrix(np.arange(1, len(phrase) + 1)).T
     result = model.predict(test)
     for item in result:
         print transition.getChord(item),
